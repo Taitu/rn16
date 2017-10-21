@@ -5,9 +5,11 @@ import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import EditPic from 'material-ui-icons/AddAPhoto';
-import ListSubheader from 'material-ui/List/ListSubheader';
-import List, { ListItem, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
+import List, { ListItem, ListItemText, ListItemIcon } from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
+import Collapse from 'material-ui/transitions/Collapse';
+import ExpandLess from 'material-ui-icons/ExpandLess';
+import ExpandMore from 'material-ui-icons/ExpandMore';
 
 const styles = theme => ({
   card: {
@@ -45,7 +47,7 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
   },
   input: {
-    margin: theme.spacing.unit,
+    margin: 0,
   },
   newImg: {
     alignSelf: 'auto',
@@ -53,114 +55,114 @@ const styles = theme => ({
     height: '50%',
     fill: '#ccc'
   },
-  listSection: {
-    background: 'inherit',
-  },
   root: {
     width: '100%',
     maxWidth: 360,
     background: theme.palette.background.paper,
-    position: 'relative',
-    overflow: 'auto',
-    maxHeight: 300,
   },
+  nested: {
+      paddingLeft: theme.spacing.unit * 4,
+  },
+  listItem: {
+    paddingLeft: '5px !important'
+  },
+  listItemNested: {
+    paddingLeft: '15px !important'
+  }
 });
 
-const cityArray = [
-  {
-    'name': 'Бишкек',
-    id: 'bishkek',
-    'subs': [
-      {'id': 0, name: 'llll', selectable: true},
-      {'id': 1, name: '5656', selectable: true},
-      {'id': 2, name: '45454l', selectable: true},
-    ]
-  },
-  {
-    'name': 'Бишкек111',
-    id: 'bishkek111',
-    'subs': [
-      {'id': 3, name: '89898l', subs: [
-        {
-          'name': 'Бишкек111',
-          id: 'bishkek111',
-          'subs': [
-            {'id': 4, name: 'zzzzzz', selectable: true},
-            {'id': 5, name: 'uuy', selectable: true},
-            {'id': 6, name: '456784l', selectable: true},
-          ]
-        }
-      ]},
-    ]
-  }
-]
+class Profile extends React.Component {
 
-function Profile(props) {
-  const { classes } = props;
+  state = {
+    open: false,
+    openNested: false
+  };
 
-  return (
-    <Card className={classes.card}>
-      {/*<CardMedia
-        className={classes.media}
-        image="https://material-ui-next.com/static/images/cards/contemplative-reptile.jpg"
-        title="Contemplative Reptile">
-        <Button fab color="accent" aria-label="add-a-photo" className={classes.editImg}>
-          <EditPic />
-        </Button>
-      </CardMedia>*/}
-      <CardMedia className={classes.mediaNew} image='/'>
-        <EditPic className={classes.newImg}/>
-      </CardMedia>
-      <CardContent>
-        <List className={classes.root} subheader>
-          {[0, 1, 2, 3, 4].map(sectionId => (
-            <div key={`section-${sectionId}`} className={classes.listSection}>
-              <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-              {[0, 1, 2].map(item => (
-                <ListItem button key={`item-${sectionId}-${item}`}>
-                  <ListItemText primary={`Item ${item}`} />
-                  <ListItemSecondaryAction>
-                    <Checkbox />
-                  </ListItemSecondaryAction>
+  handleClick = () => {
+      this.setState({ open: !this.state.open });
+  };
+
+  handleClickNested = () => {
+    this.setState({ openNested: !this.state.openNested });
+  };
+
+  render() {
+    const {classes} = this.props;
+      return (
+          <Card className={classes.card}>
+              {/*<CardMedia
+               className={classes.media}
+               image="https://material-ui-next.com/static/images/cards/contemplative-reptile.jpg"
+               title="Contemplative Reptile">
+               <Button fab color="accent" aria-label="add-a-photo" className={classes.editImg}>
+               <EditPic />
+               </Button>
+               </CardMedia>*/}
+            <CardMedia className={classes.mediaNew} image='/'>
+              <EditPic className={classes.newImg}/>
+            </CardMedia>
+            <CardContent>
+              <List className={classes.root}>
+                <ListItem button onClick={this.handleClick}>
+                  <ListItemText inset primary="Inbox" className={classes.listItem} />
+                  {this.state.open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-              ))}
-            </div>
-          ))}
-        </List>
-        <TextField
-          margin="normal"
-          label="Название компании"
-          className={classes.input}
-          name='name'
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          label="Адресс"
-          className={classes.input}
-          name="address"
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          label="телефон"
-          className={classes.input}
-          name='phone'
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          label="email"
-          className={classes.input}
-          name="email"
-          fullWidth
-        />
-      </CardContent>
-      <CardActions>
-        <Button raised color="primary" className={classes.button}>Сохранить</Button>
-      </CardActions>
-    </Card>
-  );
+                <Collapse in={this.state.open} transitionDuration="auto" unmountOnExit>
+                  <ListItem button>
+                    <ListItemText inset primary="Sent mail" className={classes.listItem}/>
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemText inset primary="Drafts" className={classes.listItem} />
+                  </ListItem>
+                  <ListItem button onClick={this.handleClickNested}>
+                    <ListItemText inset primary="Inbox" className={classes.listItem} />
+                    {this.state.openNested ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={this.state.openNested} transitionDuration="auto" unmountOnExit>
+                    <ListItem button>
+                      <ListItemText inset primary="Sent mail" className={classes.listItemNested}/>
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemText inset primary="Starred" className={classes.listItemNested}/>
+                    </ListItem>
+                  </Collapse>
+                </Collapse>
+              </List>
+              <TextField
+                  margin="normal"
+                  label="Название компании"
+                  className={classes.input}
+                  name='name'
+                  fullWidth
+              />
+              <TextField
+                  margin="normal"
+                  label="Адресс"
+                  className={classes.input}
+                  name="address"
+                  fullWidth
+              />
+              <TextField
+                  margin="normal"
+                  label="телефон"
+                  className={classes.input}
+                  name='phone'
+                  fullWidth
+              />
+              <TextField
+                  margin="normal"
+                  label="email"
+                  className={classes.input}
+                  name="email"
+                  fullWidth
+              />
+            </CardContent>
+            <CardActions>
+              <Button raised color="primary" className={classes.button}>Сохранить</Button>
+            </CardActions>
+          </Card>
+      )
+  }
 }
 
 Profile.propTypes = {
