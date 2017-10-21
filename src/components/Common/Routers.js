@@ -5,6 +5,7 @@ import Login from '../Auth/Login';
 import { userIsAuthenticated, userIsNotAuthenticated } from '../Auth/AuthHelpers';
 import Signup from '../Auth/Signup';
 import Profile from '../profile/Profile';
+import Create from '../Products/Create';
 
 
 const Routers = (props) => {
@@ -14,6 +15,7 @@ const Routers = (props) => {
         <Route path="/login" exact component={userIsNotAuthenticated(Login)} title='Войти' />
         <Route path="/signup" exact component={userIsNotAuthenticated(Signup)} />
         <Route path="/my-account" exact component={userIsAuthenticated(Profile)} />
+        <Route path="/create" exact component={userIsAuthenticated(Create)} />
       </Switch>
     );
 }
