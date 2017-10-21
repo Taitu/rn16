@@ -47,8 +47,8 @@ const Navigation = (props) => {
             <ListItem button to='/my-account' component={Link} onClick={handleDrawerClose}>
               <ListItemText primary="Личный кабинет" />
             </ListItem>
-            <ListItem button component="a" href="#simple-list">
-              <ListItemText primary="Spam" />
+            <ListItem button to='/create' component={Link} onClick={handleDrawerClose}>
+              <ListItemText primary="Создать" />
             </ListItem>
           </List>
           {/*<Divider />*/}
